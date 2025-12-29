@@ -1,50 +1,95 @@
-# React + TypeScript + Vite
+# Weatherly ☀️🌧️  
+Modern Weather Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
 
-Currently, two official plugins are available:
+Weatherly is a responsive weather application that provides real-time weather information, hourly temperature trends, and multi-day forecasts. The application is designed to deliver fast, accurate weather data with an intuitive user experience, focusing on efficient client-side data fetching and state management.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This project emphasizes frontend best practices such as API integration, caching, custom hooks, and data visualization.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Problem Space
 
-- Configure the top-level `parserOptions` property like this:
+Users often need quick access to reliable weather information across different locations, but many weather apps suffer from slow load times, poor state handling, or cluttered interfaces.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+Weatherly addresses these issues by:
+- Efficiently fetching and caching weather data
+- Providing clear visualizations for temperature trends
+- Offering a clean, responsive UI across devices
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+---
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+## Core Features
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+### Current Weather & Forecast
+- Displays current weather conditions
+- Hourly temperature forecast with charts
+- Multi-day weather forecast
+
+### Location & Search
+- Automatic weather data based on user’s current location
+- City-based weather search
+- Search history for quick access to recent locations
+- Favorite cities management
+
+### Data Visualization
+- 24-hour temperature trends using charts
+- Clear and readable forecast layouts
+
+### User Experience
+- Dark and light mode support
+- Fully responsive design
+- Fast loading states and error handling
+
+---
+
+## Architecture Overview
+
+Weatherly is built as a client-side focused application with:
+
+- **Component-driven UI** using React and TypeScript
+- **Server-state management** using TanStack Query for caching and refetching
+- **Custom hooks** for geolocation and reusable logic
+- **API-driven data layer** for weather and location data
+- **Declarative routing** for multi-page navigation
+
+---
+
+## Tech Stack
+
+**Frontend**
+- React
+- TypeScript
+- Tailwind CSS
+- shadcn/ui
+
+**State Management & Data Fetching**
+- TanStack Query (React Query)
+
+**APIs**
+- OpenWeather API
+- Geolocation API
+
+**Charts & Utilities**
+- Recharts
+- date-fns
+
+**Routing**
+- React Router DOM
+
+---
+
+## Engineering Focus
+
+- Efficient API consumption and caching strategies
+- Clean separation of UI and data-fetching logic
+- Reusable components and custom hooks
+- Responsive layouts and accessible UI
+- Graceful loading and error states
+
+---
+
+## Why This Project
+
+Weatherly demonstrates a practical approach to building data-driven frontend applications, focusing on performance, maintainability, and user experience when working with real-world APIs.
