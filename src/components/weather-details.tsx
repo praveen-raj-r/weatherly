@@ -7,7 +7,7 @@ interface WeatherDetailsProps {
   data: WeatherData;
 }
 
-export function WeatherDetails({ data }: WeatherDetailsProps) {
+const WeatherDetails = ({ data }: WeatherDetailsProps) => {
   const { wind, main, sys } = data;
 
   // Format time using date-fns
@@ -51,28 +51,40 @@ export function WeatherDetails({ data }: WeatherDetailsProps) {
   ];
 
   return (
-    <Card>
+    <Card className="bg-gradient-to-br from-slate-950 to-slate-900 border-none shadow-xl">
       <CardHeader>
-        <CardTitle>Weather Details</CardTitle>
+        <CardTitle className="text-xl font-semibold text-white">
+          Weather Details
+        </CardTitle>
+        <p className="text-xs text-slate-400">Extra atmospheric information</p>
       </CardHeader>
+
       <CardContent>
-        <div className="grid gap-6 sm:grid-cols-2">
-          {details.map((detail) => (
-            <div
-              key={detail.title}
-              className="flex items-center gap-3 rounded-lg border p-4"
-            >
-              <detail.icon className={`h-5 w-5 ${detail.color}`} />
-              <div>
-                <p className="text-sm font-medium leading-none">
-                  {detail.title}
-                </p>
-                <p className="text-sm text-muted-foreground">{detail.value}</p>
+        <div className="grid gap-4 sm:grid-cols-4 my-2">
+          {details.map((detail) => {
+            const Icon = detail.icon;
+            return (
+              <div
+                key={detail.title}
+                className="flex items-center gap-4 rounded-lg bg-slate-900/40 border border-white/10 p-4 transition hover:bg-slate-900/60"
+              >
+                <div className="p-2 rounded-full bg-slate-800 shadow-sm">
+                  <Icon className={`h-6 w-6 ${detail.color}`} />
+                </div>
+
+                <div>
+                  <p className="text-sm font-medium text-white leading-none">
+                    {detail.title}
+                  </p>
+                  <p className="text-xs text-slate-400 pt-1">{detail.value}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </CardContent>
     </Card>
   );
-}
+};
+
+export default WeatherDetails;

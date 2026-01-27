@@ -1,7 +1,7 @@
 import type { PropsWithChildren } from "react";
 import { Header } from "./header";
-
 import { Github, Linkedin, Mail } from "lucide-react";
+
 const links = [
   {
     href: "https://www.linkedin.com/in/praveenraj-sde/",
@@ -19,16 +19,13 @@ const links = [
     icon: Mail,
   },
 ];
-export function Layout({ children }: PropsWithChildren) {
+const Layout = ({ children }: PropsWithChildren) => {
   return (
-    <div className=" bg-gradient-to-br from-background to-muted">
+    <div className="bg-gradient-to-br from-background to-muted min-h-screen flex flex-col">
       <Header />
 
-      <main className="min-h-screen container mx-auto px-4 py-8">
-        {children}
-      </main>
+      <main className="flex-1 container mx-auto px-4 py-8">{children}</main>
 
-      
       <footer className="border-t border-white/10 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
           <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-6">
@@ -63,4 +60,6 @@ export function Layout({ children }: PropsWithChildren) {
       </footer>
     </div>
   );
-}
+};
+
+export default Layout;

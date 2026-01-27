@@ -20,7 +20,7 @@ interface ChartData {
   feels_like: number;
 }
 
-export function HourlyTemperature({ data }: HourlyTemperatureProps) {
+const HourlyTemperature = ({ data }: HourlyTemperatureProps) => {
   // Get today's forecast data and format for chart
 
   const chartData: ChartData[] = data.list
@@ -32,71 +32,71 @@ export function HourlyTemperature({ data }: HourlyTemperatureProps) {
     }));
 
   return (
-    <Card className="flex-1">
-      <CardHeader>
-        <CardTitle>Today's Temperature</CardTitle>
+    <Card className="flex-1 bg-gradient-to-br from-slate-950 to-slate-900 border-none shadow-xl">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-xl font-semibold text-white">
+          Hourly Temperature
+        </CardTitle>
+        <p className="text-xs text-slate-400">
+          Next 24 hours forecast · Updated live
+        </p>
       </CardHeader>
+
       <CardContent>
-        <div className="h-[200px] w-full">
+        <div className="h-[230px] w-full pt-4">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={chartData}>
               <XAxis
                 dataKey="time"
-                stroke="#888888"
+                stroke="#94a3b8"
                 fontSize={12}
                 tickLine={false}
                 axisLine={false}
               />
               <YAxis
-                stroke="#888888"
+                stroke="#94a3b8"
                 fontSize={12}
                 tickLine={false}
                 axisLine={false}
                 tickFormatter={(value) => `${value}°`}
               />
+
               <Tooltip
-                content={({ active, payload }) => {
+                wrapperClassName="backdrop-blur-md"
+                cursor={{ stroke: "#334155", strokeWidth: 1 }}
+                content={({ active, payload, label }) => {
                   if (active && payload && payload.length) {
                     return (
-                      <div className="rounded-lg border bg-background p-2 shadow-sm">
-                        <div className="grid grid-cols-2 gap-2">
-                          <div className="flex flex-col">
-                            <span className="text-[0.70rem] uppercase text-muted-foreground">
-                              Temperature
-                            </span>
-                            <span className="font-bold">
-                              {payload[0].value}°
-                            </span>
-                          </div>
-                          <div className="flex flex-col">
-                            <span className="text-[0.70rem] uppercase text-muted-foreground">
-                              Feels Like
-                            </span>
-                            <span className="font-bold">
-                              {payload[1].value}°
-                            </span>
-                          </div>
-                        </div>
+                      <div className="rounded-md border bg-slate-900/90 p-2 text-white shadow-md">
+                        <p className="text-xs mb-1 text-slate-400">{label}</p>
+                        <p className="text-sm font-semibold">
+                          Temp: {payload[0].value}°
+                        </p>
+                        <p className="text-xs text-slate-300">
+                          Feels like: {payload[1].value}°
+                        </p>
                       </div>
                     );
                   }
                   return null;
                 }}
               />
+
               <Line
                 type="monotone"
                 dataKey="temp"
-                stroke="#2563eb"
-                strokeWidth={2}
+                stroke="#38bdf8"
+                strokeWidth={3}
                 dot={false}
+                className="drop-shadow-md"
               />
               <Line
                 type="monotone"
                 dataKey="feels_like"
                 stroke="#64748b"
+                strokeDasharray="5 5"
                 strokeWidth={2}
                 dot={false}
-                strokeDasharray="5 5"
               />
             </LineChart>
           </ResponsiveContainer>
@@ -104,4 +104,6 @@ export function HourlyTemperature({ data }: HourlyTemperatureProps) {
       </CardContent>
     </Card>
   );
-}
+};
+
+export default HourlyTemperature;
