@@ -1,7 +1,8 @@
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Sunrise, Sunset, Compass, Gauge } from "lucide-react";
 import { format } from "date-fns";
 import type { WeatherData } from "@/api/types";
+import { windDirection } from "@/lib/weather";
+import { Card } from "./ui/card";
+import { WeatherIcon, type IconKind } from "./weather-icon";
 
 interface WeatherDetailsProps {
   data: WeatherData;
@@ -9,80 +10,35 @@ interface WeatherDetailsProps {
 
 const WeatherDetails = ({ data }: WeatherDetailsProps) => {
   const { wind, main, sys } = data;
+  const time = (ts: number) => format(new Date(ts * 1000), "HH:mm");
 
-  // Format time using date-fns
-  const formatTime = (timestamp: number) => {
-    return format(new Date(timestamp * 1000), "h:mm a");
-  };
-
-  // Convert wind degree to direction
-  const getWindDirection = (degree: number) => {
-    const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
-    const index =
-      Math.round(((degree %= 360) < 0 ? degree + 360 : degree) / 45) % 8;
-    return directions[index];
-  };
-
-  const details = [
+  const details: { kind: IconKind; label: string; value: string }[] = [
+    { kind: "sunrise", label: "Sunrise", value: time(sys.sunrise) },
+    { kind: "sunset", label: "Sunset", value: time(sys.sunset) },
     {
-      title: "Sunrise",
-      value: formatTime(sys.sunrise),
-      icon: Sunrise,
-      color: "text-orange-500",
+      kind: "compass",
+      label: "Wind direction",
+      value: `${windDirection(wind.deg)} · ${wind.deg}°`,
     },
-    {
-      title: "Sunset",
-      value: formatTime(sys.sunset),
-      icon: Sunset,
-      color: "text-blue-500",
-    },
-    {
-      title: "Wind Direction",
-      value: `${getWindDirection(wind.deg)} (${wind.deg}°)`,
-      icon: Compass,
-      color: "text-green-500",
-    },
-    {
-      title: "Pressure",
-      value: `${main.pressure} hPa`,
-      icon: Gauge,
-      color: "text-purple-500",
-    },
+    { kind: "gauge", label: "Pressure", value: `${main.pressure} hPa` },
   ];
 
   return (
-    <Card className="bg-gradient-to-br from-slate-950 to-slate-900 border-none shadow-xl">
-      <CardHeader>
-        <CardTitle className="text-xl font-semibold text-white">
-          Weather Details
-        </CardTitle>
-        <p className="text-xs text-slate-400">Extra atmospheric information</p>
-      </CardHeader>
-
-      <CardContent>
-        <div className="grid gap-4 sm:grid-cols-4 my-2">
-          {details.map((detail) => {
-            const Icon = detail.icon;
-            return (
-              <div
-                key={detail.title}
-                className="flex items-center gap-4 rounded-lg bg-slate-900/40 border border-white/10 p-4 transition hover:bg-slate-900/60"
-              >
-                <div className="p-2 rounded-full bg-slate-800 shadow-sm">
-                  <Icon className={`h-6 w-6 ${detail.color}`} />
-                </div>
-
-                <div>
-                  <p className="text-sm font-medium text-white leading-none">
-                    {detail.title}
-                  </p>
-                  <p className="text-xs text-slate-400 pt-1">{detail.value}</p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </CardContent>
+    <Card className="p-5 sm:p-6">
+      <h3 className="text-[15px] font-bold tracking-tight">Details</h3>
+      <div className="mt-3.5 grid grid-cols-2 gap-2">
+        {details.map((d) => (
+          <div key={d.label} className="chip flex min-w-0 flex-col gap-1 p-3">
+            <span className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
+              <WeatherIcon kind={d.kind} size={16} />
+              {d.label}
+            </span>
+            <span className="whitespace-nowrap text-[15px] font-bold tabular-nums sm:text-[17px]">
+              {d.value}
+            </span>
+          </div>
+        ))}
+      </div>
     </Card>
   );
 };

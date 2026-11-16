@@ -19,26 +19,27 @@ const links = [
     icon: Mail,
   },
 ];
+
 const Layout = ({ children }: PropsWithChildren) => {
   return (
-    <div className="bg-gradient-to-br from-background to-muted min-h-screen flex flex-col">
+    <div className="weather-bg flex min-h-screen flex-col transition-colors duration-500">
       <Header />
 
-      <main className="flex-1 container mx-auto px-4 py-8">{children}</main>
+      <main className="mx-auto w-full max-w-[1280px] flex-1 px-4 pb-14 pt-5 sm:px-7 sm:pt-7 lg:px-12">
+        {children}
+      </main>
 
-      <footer className="border-t border-white/10 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-          <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-6">
-            {/* Left */}
-            <p className="text-sm text-muted-foreground text-center sm:text-left">
+      <footer className="border-t" style={{ borderColor: "var(--line)" }}>
+        <div className="mx-auto max-w-[1280px] px-4 py-7 sm:px-7 lg:px-12">
+          <div className="flex flex-col-reverse items-center justify-between gap-5 sm:flex-row">
+            <p className="text-center text-sm text-muted-foreground sm:text-left">
               © {new Date().getFullYear()}{" "}
               <span className="font-semibold text-foreground">Weatherly</span> ✦
               Built & Maintained by{" "}
               <span className="font-semibold text-foreground">Praveen Raj</span>
             </p>
 
-            {/* Right */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               {links.map(({ href, label, icon: Icon }) => (
                 <a
                   key={href}
@@ -49,9 +50,9 @@ const Layout = ({ children }: PropsWithChildren) => {
                   }
                   aria-label={label}
                   title={label}
-                  className=" group inline-flex items-center justify-center h-10 w-10 rounded-full border border-white/10 bg-white/5 text-muted-foreground transition-all duration-300 hover:text-white hover:bg-purple-500/15 hover:border-purple-500/40 hover:-translate-y-0.5 active:scale-95"
+                  className="glass group inline-flex h-11 w-11 items-center justify-center rounded-full text-muted-foreground transition hover:-translate-y-0.5 hover:text-brand"
                 >
-                  <Icon className="h-5 w-5 transition-transform group-hover:scale-110" />
+                  <Icon className="h-5 w-5" />
                 </a>
               ))}
             </div>

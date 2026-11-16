@@ -4,64 +4,142 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
+    --background: 210 50% 98%;
+    --foreground: 215 50% 12%;
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
+    --card-foreground: 215 50% 12%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
-    --destructive: 0 84.2% 60.2%;
+    --popover-foreground: 215 50% 12%;
+    --primary: 209 90% 36%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 213 30% 93%;
+    --secondary-foreground: 215 50% 12%;
+    --muted: 213 30% 93%;
+    --muted-foreground: 215 19% 35%;
+    --accent: 213 30% 93%;
+    --accent-foreground: 215 50% 12%;
+    --destructive: 0 72% 45%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
+    --border: 213 28% 88%;
+    --input: 213 28% 88%;
+    --ring: 209 90% 36%;
+    --brand: 209 90% 36%;
+    --brand-foreground: 0 0% 100%;
+    --radius: 0.75rem;
+
+    /* glass surfaces */
+    --surface: rgba(255, 255, 255, 0.72);
+    --surface-2: rgba(15, 30, 55, 0.05);
+    --line: rgba(15, 30, 55, 0.11);
+    --grid: rgba(15, 30, 55, 0.1);
+    --shadow: 0 10px 30px -16px rgba(30, 50, 90, 0.28);
+    --header-bg: rgba(245, 248, 252, 0.72);
+    --warn: 30 90% 36%;
+    --tint: #dce8f5;
   }
   .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
+    --background: 220 47% 8%;
+    --foreground: 213 50% 97%;
+    --card: 220 47% 11%;
+    --card-foreground: 213 50% 97%;
+    --popover: 221 46% 13%;
+    --popover-foreground: 213 50% 97%;
+    --primary: 205 100% 74%;
+    --primary-foreground: 211 86% 10%;
+    --secondary: 220 30% 16%;
+    --secondary-foreground: 213 50% 97%;
+    --muted: 220 30% 16%;
+    --muted-foreground: 213 26% 71%;
+    --accent: 220 30% 16%;
+    --accent-foreground: 213 50% 97%;
+    --destructive: 0 70% 55%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    --border: 218 30% 20%;
+    --input: 218 30% 20%;
+    --ring: 205 100% 74%;
+    --brand: 205 100% 74%;
+    --brand-foreground: 211 86% 10%;
+
+    --surface: rgba(255, 255, 255, 0.075);
+    --surface-2: rgba(255, 255, 255, 0.07);
+    --line: rgba(255, 255, 255, 0.12);
+    --grid: rgba(255, 255, 255, 0.1);
+    --shadow: 0 10px 30px -14px rgba(0, 0, 0, 0.55);
+    --header-bg: rgba(10, 16, 28, 0.6);
+    --warn: 31 100% 71%;
+    --tint: #1b2a47;
   }
+
+  /* Weather-condition tints (set via data-condition on <html>) */
+  :root[data-condition="clear"] { --tint: #bddfff; }
+  :root[data-condition="clouds"] { --tint: #d3dae5; }
+  :root[data-condition="rain"] { --tint: #bcdae4; }
+  :root[data-condition="snow"] { --tint: #e1edf8; }
+  :root[data-condition="thunder"] { --tint: #dad0ef; }
+  :root[data-condition="night"] { --tint: #cbd2f2; }
+  .dark[data-condition="clear"] { --tint: #1f5a9a; }
+  .dark[data-condition="clouds"] { --tint: #3f5170; }
+  .dark[data-condition="rain"] { --tint: #1f5568; }
+  .dark[data-condition="snow"] { --tint: #52708f; }
+  .dark[data-condition="thunder"] { --tint: #46307a; }
+  .dark[data-condition="night"] { --tint: #222a66; }
 }
+
 @layer base {
   * {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+  :focus-visible {
+    outline: 2px solid hsl(var(--brand));
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .glass {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+  .chip {
+    background: var(--surface-2);
+    border-radius: 16px;
+  }
+  .overline {
+    @apply text-[13px] font-bold uppercase tracking-[0.08em] text-muted-foreground;
+  }
+  .weather-bg {
+    background-color: hsl(var(--background));
+    background-image: linear-gradient(
+      180deg,
+      var(--tint) 0,
+      hsl(var(--background)) 760px
+    );
+    background-repeat: no-repeat;
+  }
+}
+
+@keyframes starpop {
+  0% { transform: scale(0.6) rotate(-20deg); }
+  55% { transform: scale(1.35) rotate(8deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+@keyframes fadein {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+.animate-starpop { animation: starpop 0.6s ease-out; }
+.animate-fadein { animation: fadein 0.2s ease-out; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

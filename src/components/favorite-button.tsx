@@ -1,9 +1,7 @@
-// src/components/weather/favorite-button.tsx
-import { Star } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import type { WeatherData } from "@/api/types";
 import { useFavorites } from "@/hooks/use-favorite";
 import { toast } from "sonner";
+import { WeatherIcon } from "./weather-icon";
 
 interface FavoriteButtonProps {
   data: WeatherData;
@@ -29,15 +27,29 @@ export function FavoriteButton({ data }: FavoriteButtonProps) {
   };
 
   return (
-    <Button
-      variant={isCurrentlyFavorite ? "default" : "outline"}
-      size="icon"
+    <button
       onClick={handleToggleFavorite}
-      className={isCurrentlyFavorite ? "bg-yellow-500 hover:bg-yellow-600" : ""}
+      aria-pressed={isCurrentlyFavorite}
+      aria-label={
+        isCurrentlyFavorite
+          ? `Remove ${data.name} from favorites`
+          : `Add ${data.name} to favorites`
+      }
+      className="flex h-11 w-11 flex-none items-center justify-center rounded-[14px] transition hover:bg-foreground/10"
     >
-      <Star
-        className={`h-4 w-4 ${isCurrentlyFavorite ? "fill-current" : ""}`}
-      />
-    </Button>
+      {/* key re-mounts the icon so the pop animation plays on each add */}
+      <span
+        key={String(isCurrentlyFavorite)}
+        className={isCurrentlyFavorite ? "animate-starpop block" : "block"}
+      >
+        <WeatherIcon
+          kind={isCurrentlyFavorite ? "starfill" : "star"}
+          size={22}
+          className={
+            isCurrentlyFavorite ? "text-[#F5B83D]" : "text-muted-foreground"
+          }
+        />
+      </span>
+    </button>
   );
 }

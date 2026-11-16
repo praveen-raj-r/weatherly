@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap">
+<style>body{margin:0;background:#05080f;font-family:Manrope,system-ui,sans-serif}a{color:#7CC4FF}a:hover{color:#BFE0FF}</style>
+</helmet>
+<section style="padding:64px;display:flex;flex-direction:column;gap:72px;color:#F2F6FB">
+  <header style="max-width:900px"><h1 style="margin:0;font-size:56px;font-weight:300;letter-spacing:-0.04em">Weatherly <span style="font-weight:800">redesign</span></h1><p style="color:#A9B6C8;font-size:18px;line-height:1.5">Dark default, light with its own tinted surfaces. Jump: <a href="#1a">1a Dashboard desktop</a> · <a href="#1c">1c Tablet</a> · <a href="#1e">1e Mobile</a> · <a href="#1g">1g City</a> · <a href="#1j">1j Search</a> · <a href="#1m">1m States</a> · <a href="#1n">1n Style guide</a></p></header>
+
+  <div style="display:flex;flex-direction:column;gap:20px"><h2 style="margin:0;font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:#A9B6C8">Dashboard · desktop 1280</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:40px;align-items:flex-start">
+      <div id="1a" style="display:flex;flex-direction:column;gap:10px"><b style="{{ badge }}">1a · Dark · rain</b><dc-import name="WeatherScreen" theme="dark" device="desktop" condition="rain" style="border-radius:20px;overflow:hidden;width:1280px" hint-size="1280px,1200px"></dc-import></div>
+      <div id="1b" style="display:flex;flex-direction:column;gap:10px"><b style="{{ badge }}">1b · Light · clear</b><dc-import name="WeatherScreen" theme="light" device="desktop" condition="clear" style="border-radius:20px;overflow:hidden;width:1280px" hint-size="1280px,1200px"></dc-import></div>
+    </div></div>
+
+  <div style="display:flex;flex-direction:column;gap:20px"><h2 style="margin:0;font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:#A9B6C8">Dashboard · tablet 768</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:40px;align-items:flex-start">
+      <div id="1c" style="display:flex;flex-direction:column;gap:10px"><b style="{{ badge }}">1c · Dark · clouds</b><dc-import name="WeatherScreen" theme="dark" device="tablet" condition="clouds" style="border-radius:20px;overflow:hidden;width:768px" hint-size="768px,1300px"></dc-import></div>
+      <div id="1d" style="display:flex;flex-direction:column;gap:10px"><b style="{{ badge }}">1d · Light · snow</b><dc-import name="WeatherScreen" theme="light" device="tablet" condition="snow" style="border-radius:20px;overflow:hidden;width:768px" hint-size="768px,1300px"></dc-import></div>
+    </div></div>
+
+  <div style="display:flex;flex-direction:column;gap:20px"><h2 style="margin:0;font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:#A9B6C8">Dashboard · mobile 390</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:40px;align-items:flex-start">
+      <div id="1e" style="display:flex;flex-direction:column;gap:10px"><b style="{{ badge }}">1e · Dark · night</b><dc-import name="WeatherScreen" theme="dark" device="mobile" condition="night" style="border-radius:20px;overflow:hidden;width:390px" hint-size="390px,1900px"></dc-import></div>
+      <div id="1f" style="display:flex;flex-direction:column;gap:10px"><b style="{{ badge }}">1f · Light · thunderstorm</b><dc-import name="WeatherScreen" theme="light" device="mobile" condition="thunder" style="border-radius:20px;overflow:hidden;width:390px" hint-size="390px,1900px"></dc-import></div>
+    </div></div>
+
+  <div style="display:flex;flex-direction:column;gap:20px"><h2 style="margin:0;font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:#A9B6C8">City page · star toggle beside title</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:40px;align-items:flex-start">
+      <div id="1g" style="display:flex;flex-direction:column;gap:10px"><b style="{{ badge }}">1g · Dark · desktop</b><dc-import name="WeatherScreen" theme="dark" device="desktop" view="city" condition="clear" style="border-radius:20px;overflow:hidden;width:1280px" hint-size="1280px,1200px"></dc-import></div>
+      <div id="1h" style="display:flex;flex-direction:column;gap:10px"><b style="{{ badge }}">1h · Light · desktop</b><dc-import name="WeatherScreen" theme="light" device="desktop" view="city" condition="clouds" style="border-radius:20px;overflow:hidden;width:1280px" hint-size="1280px,1200px"></dc-import></div>
+      <div id="1i" style="display:flex;flex-direction:column;gap:10px"><b style="{{ badge }}">1i · Dark · mobile · snow</b><dc-import name="WeatherScreen" theme="dark" device="mobile" view="city" condition="snow" style="border-radius:20px;overflow:hidden;width:390px" hint-size="390px,1900px"></dc-import></div>
+    </div></div>
+
+  <div style="display:flex;flex-direction:column;gap:20px"><h2 style="margin:0;font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:#A9B6C8">Search dialog</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:40px;align-items:flex-start">
+      <div id="1j" style="display:flex;flex-direction:column;gap:10px"><b style="{{ badge }}">1j · Dark · results</b><dc-import name="WeatherScreen" theme="dark" device="desktop" view="search" condition="rain" style="border-radius:20px;overflow:hidden;width:1280px" hint-size="1280px,860px"></dc-import></div>
+      <div id="1k" style="display:flex;flex-direction:column;gap:10px"><b style="{{ badge }}">1k · Light · results</b><dc-import name="WeatherScreen" theme="light" device="desktop" view="search" condition="rain" style="border-radius:20px;overflow:hidden;width:1280px" hint-size="1280px,860px"></dc-import></div>
+      <div id="1l" style="display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start">
+        <div style="display:flex;flex-direction:column;gap:10px"><b style="{{ badge }}">Mobile · dark</b><dc-import name="WeatherScreen" theme="dark" device="mobile" view="search" condition="rain" style="border-radius:20px;overflow:hidden;width:390px" hint-size="390px,780px"></dc-import></div>
+        <div style="display:flex;flex-direction:column;gap:10px"><b style="{{ badge }}">Mobile · light · loading</b><dc-import name="WeatherScreen" theme="light" device="mobile" view="search" search-state="loading" condition="rain" style="border-radius:20px;overflow:hidden;width:390px" hint-size="390px,780px"></dc-import></div>
+        <div style="display:flex;flex-direction:column;gap:10px"><b style="{{ badge }}">Mobile · dark · no results</b><dc-import name="WeatherScreen" theme="dark" device="mobile" view="search" search-state="empty" condition="rain" style="border-radius:20px;overflow:hidden;width:390px" hint-size="390px,780px"></dc-import></div>
+      </div>
+    </div></div>
+
+  <div id="1m" style="display:flex;flex-direction:column;gap:20px"><h2 style="margin:0;font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:#A9B6C8">States · dark (top) and light (bottom)</h2>
+    <div style="display:grid;grid-template-columns:repeat(5,360px);gap:24px">
+      <dc-import name="StateCard" kind="skeleton" theme="dark" hint-size="360px,420px"></dc-import>
+      <dc-import name="StateCard" kind="denied" theme="dark" hint-size="360px,420px"></dc-import>
+      <dc-import name="StateCard" kind="error" theme="dark" hint-size="360px,420px"></dc-import>
+      <dc-import name="StateCard" kind="notfound" theme="dark" hint-size="360px,420px"></dc-import>
+      <dc-import name="StateCard" kind="empty" theme="dark" hint-size="360px,420px"></dc-import>
+      <dc-import name="StateCard" kind="skeleton" theme="light" hint-size="360px,420px"></dc-import>
+      <dc-import name="StateCard" kind="denied" theme="light" hint-size="360px,420px"></dc-import>
+      <dc-import name="StateCard" kind="error" theme="light" hint-size="360px,420px"></dc-import>
+      <dc-import name="StateCard" kind="notfound" theme="light" hint-size="360px,420px"></dc-import>
+      <dc-import name="StateCard" kind="empty" theme="light" hint-size="360px,420px"></dc-import>
+    </div></div>
+
+  <div id="1n" style="display:flex;flex-direction:column;gap:28px;width:1280px;background:#0A101C;border:1px solid rgba(255,255,255,.12);border-radius:28px;padding:48px;box-sizing:border-box">
+    <h2 style="margin:0;font-size:36px;font-weight:300;letter-spacing:-0.03em">Style guide <span style="font-weight:800">· tokens</span></h2>
+    <div style="{{ gh }}">Color · neutrals & accent (Tailwind keys)</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+      <sc-for list="{{ colors }}" as="c" hint-placeholder-count="8"><div style="border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.12)"><div style="height:56px;background:{{ c.hex }}"></div><div style="padding:10px 12px;font-size:12px;line-height:1.5;color:#C5D0DF"><b style="color:#F2F6FB">{{ c.name }}</b><br>{{ c.hex }} · {{ c.use }}</div></div></sc-for>
+    </div>
+    <div style="{{ gh }}">Condition tints · top of page gradient → base (dark / light)</div>
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:12px">
+      <sc-for list="{{ tints }}" as="c" hint-placeholder-count="6"><div style="border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.12)"><div style="height:64px;background:{{ c.d }}"></div><div style="height:32px;background:{{ c.l }}"></div><div style="padding:10px 12px;font-size:12px;color:#C5D0DF"><b style="color:#F2F6FB">{{ c.name }}</b><br>{{ c.d }}<br>{{ c.l }}</div></div></sc-for>
+    </div>
+    <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:32px">
+      <div><div style="{{ gh }}">Type · Manrope</div>
+        <sc-for list="{{ types }}" as="t" hint-placeholder-count="7"><div style="display:flex;align-items:baseline;gap:16px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.08)"><span style="width:200px;font-size:12px;color:#A9B6C8;flex:none">{{ t.name }}</span><span style="{{ t.s }}">{{ t.sample }}</span></div></sc-for></div>
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div><div style="{{ gh }}">Spacing (4px base) · Tailwind</div><div style="display:flex;align-items:flex-end;gap:10px"><sc-for list="{{ spaces }}" as="s" hint-placeholder-count="8"><div style="text-align:center;font-size:11px;color:#A9B6C8"><div style="width:{{ s.px }}px;height:{{ s.px }}px;background:#7CC4FF;border-radius:4px;margin:0 auto 6px;opacity:.8"></div>{{ s.k }}<br>{{ s.px }}</div></sc-for></div></div>
+        <div><div style="{{ gh }}">Radius</div><div style="display:flex;gap:12px"><sc-for list="{{ radii }}" as="r" hint-placeholder-count="5"><div style="text-align:center;font-size:11px;color:#A9B6C8"><div style="width:56px;height:56px;border:2px solid #7CC4FF;border-radius:{{ r.px }}px;margin-bottom:6px"></div>{{ r.k }}<br>{{ r.px }}</div></sc-for></div></div>
+        <div><div style="{{ gh }}">Elevation</div><div style="display:flex;gap:12px"><sc-for list="{{ elev }}" as="e" hint-placeholder-count="3"><div style="flex:1;border-radius:16px;padding:14px;background:#121B30;font-size:11px;line-height:1.5;color:#A9B6C8;box-shadow:{{ e.sh }}"><b style="color:#F2F6FB;font-size:12px">{{ e.name }}</b><br>{{ e.use }}</div></sc-for></div></div>
+      </div>
+    </div>
+    <div style="{{ gh }}">Component specs</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px">
+      <sc-for list="{{ specs }}" as="s" hint-placeholder-count="4"><div style="padding:18px;border-radius:20px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);font-size:13px;line-height:1.6;color:#C5D0DF"><b style="font-size:15px;color:#F2F6FB">{{ s.name }}</b><br>{{ s.body }}</div></sc-for>
+    </div>
+    <div style="{{ gh }}">Implementation & a11y</div>
+    <p style="margin:0;font-size:14px;line-height:1.7;color:#C5D0DF;max-width:1000px">Tailwind: extend theme with the colors above under <code>sky</code>/<code>ink</code>/<code>tint</code> keys; radii 12/16/20/24/28; surfaces use <code>bg-white/[.075] border-white/10 backdrop-blur-xl</code> (light: <code>bg-white/70 border-slate-900/10</code>). shadcn: Dialog + Command for search, Button (ghost, 44px icon), Toggle for star (aria-pressed), Skeleton, Card, ScrollArea (horizontal). Recharts: AreaChart + Area (gradient), dashed Line for feels-like, custom Tooltip, grid 3 horizontal lines only. Icons: weather set is duotone (1.6 stroke, 20% fill), UI uses lucide-react. Dark text contrast ≥ 7:1 (#F2F6FB on #0A101C), muted ≥ 5.5:1; light muted #475569 on white ≥ 7:1. Focus ring 2px accent, 2px offset. All icon buttons are 44×44 with aria-label. Respect prefers-reduced-motion: disable lift, star pop and skeleton pulse.</p>
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const K = [['Sky 300','#7CC4FF','Accent (dark)'],['Sky 700','#0A5FB0','Accent (light)'],['Ink 950','#0A101C','Base (dark)'],['Ink 50','#F5F8FC','Base (light)'],['Ink 100','#F2F6FB','Text (dark)'],['Ink 900','#0F1B2D','Text (light)'],['Slate 300','#A9B6C8','Muted (dark)'],['Slate 600','#475569','Muted (light)'],['Amber 400','#F5B83D','Favorite star'],['Amber 300','#FFB86B','Warning (dark)'],['Amber 700','#B45309','Warning (light)'],['Ink 850','#121B30','Dialog (dark)']];
+    const T = [['Clear','#1F5A9A','#BDDFFF'],['Clouds','#3F5170','#D3DAE5'],['Rain','#1F5568','#BCDAE4'],['Snow','#52708F','#E1EDF8'],['Thunder','#46307A','#DAD0EF'],['Night','#222A66','#CBD2F2']];
+    const Ty = [['Display · 128/0.9 · 300','18°',"font-size:64px;font-weight:300;letter-spacing:-0.06em;line-height:1"],['Display mobile · 96 · 300','Temp',"font-size:44px;font-weight:300;letter-spacing:-0.05em"],['H1 · 32/800 · −0.03em','My Location',"font-size:32px;font-weight:800;letter-spacing:-0.03em"],['Title · 20/600','Light rain',"font-size:20px;font-weight:600"],['Body · 15/500','Broken clouds',"font-size:15px;font-weight:500"],['Caption · 12/600','Humidity 64%',"font-size:12px;font-weight:600;color:#A9B6C8"],['Overline · 13/700 caps +.08em','FAVORITES',"font-size:13px;font-weight:700;letter-spacing:.08em;color:#A9B6C8"]];
+    return {
+      badge: 'align-self:flex-start;font:700 13px Manrope;padding:5px 12px;border-radius:999px;background:#7CC4FF;color:#06182B',
+      gh: 'font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#7CC4FF',
+      colors: K.map(k => ({ name: k[0], hex: k[1], use: k[2] })), tints: T.map(k => ({ name: k[0], d: k[1], l: k[2] })),
+      types: Ty.map(k => ({ name: k[0], sample: k[1], s: k[2] })),
+      spaces: [['1',4],['2',8],['3',12],['4',16],['5',20],['6',24],['8',32],['12',48]].map(s => ({ k: s[0], px: s[1] })),
+      radii: [['xl',12],['2xl',16],['3xl',20],['4xl',24],['5xl',28]].map(r => ({ k: r[0], px: r[1] })),
+      elev: [{ name: 'E0 · flat', use: 'Chips, inset', sh: 'none' }, { name: 'E1 · card', use: 'Cards, tiles', sh: '0 10px 30px -14px rgba(0,0,0,.55)' }, { name: 'E2 · overlay', use: 'Dialog, tooltip', sh: '0 30px 80px -20px rgba(0,0,0,.7)' }],
+      specs: [
+        { name: 'Favorite tile', body: '172×164 (150×150 mobile), r20, p14, glass surface. Icon 30 top-left; city 15/700, country 12 muted, temp 26/300 + condition. Remove X in a 44px hit area top-right. Hover: lift 4px, shadow E2-lite, 200ms. Scroll-snap start.' },
+        { name: 'Hero card', body: 'r28, p20/28. Header: city 15/600, region 13 muted, refresh 44px. Temp 96/128 weight 300, −0.06em; condition 20/600; feels-like 14 muted. Duotone icon 84/112. Three chips: High/Low, Humidity, Wind.' },
+        { name: 'Forecast row', body: 'min-height 64, hairline divider. Day 14/700 (44w) · icon 28 · condition 14/500 with humidity · wind 12 muted · high 15/700 and low muted, tabular numerals.' },
+        { name: 'Search item', body: 'min-height 48, r12, px12, gap12. Leading icon 18 (star amber / clock muted / pin accent), city 15/600, country 13 muted, trailing value. Active: surface tint + 1.5px accent ring. Section label 12/700 caps; Clear is a 44px text button.' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

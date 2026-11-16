@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap">
+<style>@keyframes starpop{0%{transform:scale(.6) rotate(-20deg)}55%{transform:scale(1.35) rotate(8deg)}100%{transform:scale(1) rotate(0)}}@keyframes shim{0%,100%{opacity:.5}50%{opacity:1}}</style>
+</helmet>
+<div style="{{ rootS }}">
+  <header style="{{ headerS }}">
+    <div style="display:flex;align-items:center;gap:10px">
+      <dc-import name="WIcon" kind="clear" size="28" color="{{ t.accent }}" hint-size="28px,28px"></dc-import>
+      <span style="font-weight:800;font-size:20px;letter-spacing:-0.02em">Weatherly</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <button aria-label="Search cities" style="{{ searchBtnS }}" style-focus="{{ focusS }}">
+        <dc-import name="WIcon" kind="search" size="20" color="{{ t.muted }}" hint-size="20px,20px"></dc-import>
+        <sc-if value="{{ isWide }}" hint-placeholder-val="{{ true }}"><span style="flex:1;text-align:left;font-size:15px;color:{{ t.muted }}">Search cities…</span><kbd style="font:600 12px Manrope;padding:3px 7px;border-radius:6px;border:1px solid {{ t.border }};color:{{ t.muted }}">⌘K</kbd></sc-if>
+      </button>
+      <button aria-label="{{ themeLabel }}" style="{{ iconBtnS }}" style-focus="{{ focusS }}">
+        <dc-import name="WIcon" kind="{{ themeIcon }}" size="20" color="{{ t.text }}" hint-size="20px,20px"></dc-import>
+      </button>
+    </div>
+  </header>
+
+  <main style="{{ mainS }}">
+    <section aria-label="Favorites" style="display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;align-items:baseline;justify-content:space-between"><h2 style="{{ h2S }}">Favorites</h2><span style="font-size:13px;color:{{ t.muted }}">4 cities</span></div>
+      <div style="{{ stripS }}">
+        <sc-for list="{{ favs }}" as="f" hint-placeholder-count="4">
+          <div style="{{ tileS }}" style-hover="transform:translateY(-4px);box-shadow:0 14px 32px -12px rgba(0,0,0,.45)">
+            <button aria-label="{{ f.rm }}" style="{{ rmS }}" style-focus="{{ focusS }}"><dc-import name="WIcon" kind="x" size="16" color="{{ t.muted }}" hint-size="16px,16px"></dc-import></button>
+            <dc-import name="WIcon" kind="{{ f.kind }}" size="30" color="{{ t.accent }}" hint-size="30px,30px"></dc-import>
+            <div style="margin-top:auto">
+              <div style="font-size:15px;font-weight:700;letter-spacing:-0.01em">{{ f.city }}</div>
+              <div style="font-size:12px;color:{{ t.muted }};margin-top:1px">{{ f.country }}</div>
+              <div style="display:flex;align-items:baseline;justify-content:space-between;margin-top:8px"><span style="font-size:26px;font-weight:300;letter-spacing:-0.03em;font-variant-numeric:tabular-nums">{{ f.temp }}°</span><span style="font-size:12px;color:{{ t.muted }}">{{ f.cond }}</span></div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+      <div style="display:flex;align-items:center;gap:10px;min-width:0">
+        <sc-if value="{{ isDash }}" hint-placeholder-val="{{ true }}"><dc-import name="WIcon" kind="pin" size="22" color="{{ t.accent }}" hint-size="22px,22px"></dc-import></sc-if>
+        <h1 style="{{ h1S }}">{{ pageTitle }}</h1>
+        <sc-if value="{{ isCity }}" hint-placeholder-val="{{ false }}"><button aria-label="Remove Lisbon from favorites" aria-pressed="true" style="{{ iconBtnS }}" style-focus="{{ focusS }}"><span style="display:block;animation:starpop .6s ease-out"><dc-import name="WIcon" kind="starfill" size="22" color="#F5B83D" hint-size="22px,22px"></dc-import></span></button></sc-if>
+      </div>
+      <span style="font-size:13px;color:{{ t.muted }}">Updated 14:32</span>
+    </div>
+
+    <div style="{{ gridS }}">
+      <div style="display:flex;flex-direction:column;gap:{{ gap }}px;min-width:0">
+        <article style="{{ heroS }}">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+            <div><div style="font-size:15px;font-weight:600">{{ city }}</div><div style="font-size:13px;color:{{ t.muted }};margin-top:2px">{{ region }}</div></div>
+            <button aria-label="Refresh weather" style="{{ iconBtnS }}" style-focus="{{ focusS }}"><dc-import name="WIcon" kind="refresh" size="20" color="{{ t.text }}" hint-size="20px,20px"></dc-import></button>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin:{{ heroM }}">
+            <div>
+              <div style="{{ bigS }}">{{ c.temp }}°</div>
+              <div style="font-size:20px;font-weight:600;margin-top:4px">{{ c.label }}</div>
+              <div style="font-size:14px;color:{{ t.muted }};margin-top:2px">Feels like {{ c.feels }}°</div>
+            </div>
+            <dc-import name="WIcon" kind="{{ c.kind }}" size="{{ heroIcon }}" sw="1.2" color="{{ t.accent }}" hint-size="{{ heroIconPx }}"></dc-import>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
+            <div style="{{ chipS }}"><span style="{{ capS }}">High / Low</span><span style="{{ valS }}">{{ c.hi }}° / {{ c.lo }}°</span></div>
+            <div style="{{ chipS }}"><span style="{{ capS }}">Humidity</span><span style="{{ valS }}">{{ c.hum }}%</span></div>
+            <div style="{{ chipS }}"><span style="{{ capS }}">Wind</span><span style="{{ valS }}">14 km/h NW</span></div>
+          </div>
+        </article>
+
+        <article style="{{ cardS }}">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+            <h3 style="{{ h3S }}">Next 24 hours</h3>
+            <div style="display:flex;gap:14px;font-size:12px;color:{{ t.muted }}"><span style="display:flex;align-items:center;gap:6px"><i style="width:14px;height:3px;border-radius:2px;background:{{ t.accent }}"></i>Temperature</span><span style="display:flex;align-items:center;gap:6px"><i style="width:14px;height:0;border-top:2px dashed {{ t.muted }}"></i>Feels like</span></div>
+          </div>
+          <div style="position:relative;margin-top:18px;height:{{ chartH }}px">
+            <svg viewBox="0 0 600 180" preserveAspectRatio="none" width="100%" height="100%" role="img" aria-label="Hourly temperature chart" style="display:block;overflow:visible">
+              <defs><linearGradient id="{{ gid }}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="{{ t.accent }}" stopOpacity="0.38"></stop><stop offset="100%" stopColor="{{ t.accent }}" stopOpacity="0"></stop></linearGradient></defs>
+              <path d="M0 45H600M0 90H600M0 135H600" stroke="{{ t.grid }}" strokeWidth="1" vectorEffect="non-scaling-stroke" fill="none"></path>
+              <path d="{{ areaD }}" fill="url(#{{ gid }})"></path>
+              <path d="{{ feelD }}" fill="none" stroke="{{ t.muted }}" strokeWidth="1.5" strokeDasharray="4 4" vectorEffect="non-scaling-stroke"></path>
+              <path d="{{ lineD }}" fill="none" stroke="{{ t.accent }}" strokeWidth="2.5" strokeLinecap="round" vectorEffect="non-scaling-stroke"></path>
+              <path d="{{ cursorD }}" stroke="{{ t.muted }}" strokeWidth="1" strokeDasharray="2 3" vectorEffect="non-scaling-stroke"></path>
+            </svg>
+            <div style="{{ dotS }}"></div>
+            <div style="{{ tipS }}"><div style="font-size:11px;color:{{ t.muted }};font-weight:600">{{ tip.time }}</div><div style="font-size:15px;font-weight:700;margin-top:2px">{{ tip.t }}°</div><div style="font-size:11px;color:{{ t.muted }}">Feels {{ tip.f }}°</div></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:10px;font-size:12px;color:{{ t.muted }};font-variant-numeric:tabular-nums"><span>Now</span><span>06:00</span><span>12:00</span><span>18:00</span><span>00:00</span></div>
+        </article>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:{{ gap }}px;min-width:0">
+        <article style="{{ cardS }}">
+          <h3 style="{{ h3S }}">Details</h3>
+          <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:14px">
+            <sc-for list="{{ details }}" as="d" hint-placeholder-count="4">
+              <div style="{{ chipS }}"><span style="display:flex;align-items:center;gap:6px;{{ capS }}"><dc-import name="WIcon" kind="{{ d.kind }}" size="16" color="{{ t.muted }}" hint-size="16px,16px"></dc-import>{{ d.k }}</span><span style="{{ valS }}">{{ d.v }}</span></div>
+            </sc-for>
+          </div>
+        </article>
+        <article style="{{ cardS }}">
+          <h3 style="{{ h3S }}">5-day forecast</h3>
+          <div style="display:flex;flex-direction:column;margin-top:6px">
+            <sc-for list="{{ days }}" as="d" hint-placeholder-count="5">
+              <div style="{{ rowS }}">
+                <span style="width:44px;font-size:14px;font-weight:700">{{ d.day }}</span>
+                <dc-import name="WIcon" kind="{{ d.kind }}" size="28" color="{{ t.accent }}" hint-size="28px,28px"></dc-import>
+                <div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:500">{{ d.cond }}</div><div style="font-size:12px;color:{{ t.muted }};margin-top:1px">{{ d.sub }}</div></div>
+                <div style="display:flex;gap:10px;font-size:15px;font-variant-numeric:tabular-nums"><span style="font-weight:700">{{ d.hi }}°</span><span style="color:{{ t.muted }}">{{ d.lo }}°</span></div>
+              </div>
+            </sc-for>
+          </div>
+        </article>
+      </div>
+    </div>
+  </main>
+
+  <sc-if value="{{ isSearch }}" hint-placeholder-val="{{ false }}">
+    <div style="{{ scrimS }}">
+      <div role="dialog" aria-label="Search cities" style="{{ dialogS }}">
+        <div style="display:flex;align-items:center;gap:12px;padding:0 16px;height:60px;border-bottom:1px solid {{ t.border }}">
+          <dc-import name="WIcon" kind="search" size="20" color="{{ t.accent }}" hint-size="20px,20px"></dc-import>
+          <span style="flex:1;font-size:17px;font-weight:500">{{ query }}<i style="display:inline-block;width:2px;height:20px;background:{{ t.accent }};vertical-align:-4px;margin-left:1px"></i></span>
+          <kbd style="font:600 12px Manrope;padding:4px 8px;border-radius:6px;border:1px solid {{ t.border }};color:{{ t.muted }}">Esc</kbd>
+        </div>
+        <div style="padding:8px;max-height:560px;overflow:hidden;display:flex;flex-direction:column;gap:6px">
+          <sc-if value="{{ ssResults }}" hint-placeholder-val="{{ true }}">
+            <div style="{{ secS }}">Favorites</div>
+            <sc-for list="{{ sFav }}" as="r" hint-placeholder-count="2"><div style="{{ itemS }}"><dc-import name="WIcon" kind="starfill" size="18" color="#F5B83D" hint-size="18px,18px"></dc-import><span style="font-weight:600">{{ r.city }}</span><span style="color:{{ t.muted }};font-size:13px;flex:1">{{ r.country }}</span><span style="font-variant-numeric:tabular-nums;font-weight:600">{{ r.temp }}°</span></div></sc-for>
+            <div style="{{ secS }}"><span style="flex:1">Recent searches</span><button style="{{ clearS }}" style-focus="{{ focusS }}">Clear</button></div>
+            <sc-for list="{{ sRec }}" as="r" hint-placeholder-count="3"><div style="{{ itemS }}"><dc-import name="WIcon" kind="clock" size="18" color="{{ t.muted }}" hint-size="18px,18px"></dc-import><span style="font-weight:600">{{ r.city }}</span><span style="color:{{ t.muted }};font-size:13px;flex:1">{{ r.country }}</span></div></sc-for>
+            <div style="{{ secS }}">Suggestions</div>
+            <sc-for list="{{ sSug }}" as="r" hint-placeholder-count="3"><div style="{{ r.s }}"><dc-import name="WIcon" kind="pin" size="18" color="{{ t.accent }}" hint-size="18px,18px"></dc-import><span style="font-weight:600">{{ r.city }}</span><span style="color:{{ t.muted }};font-size:13px;flex:1">{{ r.country }}</span><span style="font-size:12px;color:{{ t.muted }}">{{ r.coord }}</span></div></sc-for>
+          </sc-if>
+          <sc-if value="{{ ssLoading }}" hint-placeholder-val="{{ false }}">
+            <div style="{{ secS }}">Suggestions</div>
+            <sc-for list="{{ skel }}" as="r" hint-placeholder-count="4"><div style="{{ itemS }}"><i style="{{ r.a }}"></i><i style="{{ r.b }}"></i></div></sc-for>
+          </sc-if>
+          <sc-if value="{{ ssEmpty }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:44px 16px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px">
+              <dc-import name="WIcon" kind="help" size="36" sw="1.3" color="{{ t.muted }}" hint-size="36px,36px"></dc-import>
+              <div style="font-size:17px;font-weight:700">No cities found</div>
+              <div style="font-size:14px;color:{{ t.muted }};max-width:300px">Nothing matches “Xyzzq”. Check the spelling or try a nearby larger city.</div>
+            </div>
+          </sc-if>
+        </div>
+        <sc-if value="{{ isWide }}" hint-placeholder-val="{{ true }}"><div style="display:flex;gap:18px;padding:12px 16px;border-top:1px solid {{ t.border }};font-size:12px;color:{{ t.muted }}"><span>↑↓ Navigate</span><span>↵ Open</span><span>Esc Close</span></div></sc-if>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;dark&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;dark&quot;,&quot;light&quot;]},&quot;device&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;desktop&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;mobile&quot;,&quot;tablet&quot;,&quot;desktop&quot;]},&quot;view&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;dashboard&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;dashboard&quot;,&quot;city&quot;,&quot;search&quot;]},&quot;condition&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;rain&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;clear&quot;,&quot;clouds&quot;,&quot;rain&quot;,&quot;snow&quot;,&quot;thunder&quot;,&quot;night&quot;]},&quot;searchState&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;results&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;results&quot;,&quot;loading&quot;,&quot;empty&quot;]}}">
+class Component extends DCLogic {
+  renderVals() {
+    const p = this.props, theme = p.theme || 'dark', dev = p.device || 'desktop', view = p.view || 'dashboard', cond = p.condition || 'rain', ss = p.searchState || 'results';
+    const dk = theme === 'dark';
+    const W = { mobile: 390, tablet: 768, desktop: 1280 }[dev];
+    const isM = dev === 'mobile', isD = dev === 'desktop', isWide = !isM;
+    const tints = dk
+      ? { clear: '#1F5A9A', clouds: '#3F5170', rain: '#1F5568', snow: '#52708F', thunder: '#46307A', night: '#222A66' }
+      : { clear: '#BDDFFF', clouds: '#D3DAE5', rain: '#BCDAE4', snow: '#E1EDF8', thunder: '#DAD0EF', night: '#CBD2F2' };
+    const t = dk ? {
+      base: '#0A101C', text: '#F2F6FB', muted: '#A9B6C8', accent: '#7CC4FF', border: 'rgba(255,255,255,.12)',
+      surf: 'rgba(255,255,255,.075)', surf2: 'rgba(255,255,255,.07)', header: 'rgba(10,16,28,.6)', grid: 'rgba(255,255,255,.1)', tipBg: '#16203A', shadow: '0 10px 30px -14px rgba(0,0,0,.55)'
+    } : {
+      base: '#F5F8FC', text: '#0F1B2D', muted: '#475569', accent: '#0A5FB0', border: 'rgba(15,30,55,.11)',
+      surf: 'rgba(255,255,255,.72)', surf2: 'rgba(15,30,55,.05)', header: 'rgba(245,248,252,.72)', grid: 'rgba(15,30,55,.1)', tipBg: '#FFFFFF', shadow: '0 10px 30px -16px rgba(30,50,90,.28)'
+    };
+    const pad = isM ? 16 : isD ? 48 : 28, gap = isM ? 14 : 20;
+    const D = {
+      clear: { label: 'Clear sky', kind: 'clear', temp: 24, hum: 38 }, clouds: { label: 'Broken clouds', kind: 'clouds', temp: 17, hum: 66 },
+      rain: { label: 'Light rain', kind: 'rain', temp: 14, hum: 84 }, snow: { label: 'Light snow', kind: 'snow', temp: -2, hum: 79 },
+      thunder: { label: 'Thunderstorm', kind: 'thunder', temp: 22, hum: 88 }, night: { label: 'Clear night', kind: 'night', temp: 11, hum: 58 }
+    }[cond];
+    const c = { ...D, feels: D.temp - 2, hi: D.temp + 3, lo: D.temp - 5 };
+    const dT = D.temp - 18;
+    const base = [18,19,20,21,21,20,19,17,16,15,15,14,14,13,13,13,14,15,17,19,20,21,20,19].map(v => v + dT);
+    const feel = base.map(v => v - 2);
+    const all = base.concat(feel), mn = Math.min(...all) - 1, mx = Math.max(...all) + 1;
+    const X = i => (i / 23) * 600, Y = v => 175 - ((v - mn) / (mx - mn)) * 165;
+    const line = a => a.map((v, i) => (i ? 'L' : 'M') + X(i).toFixed(1) + ' ' + Y(v).toFixed(1)).join('');
+    const ti = 6;
+    const tip = { time: '21:00', t: base[ti], f: feel[ti] };
+    const lx = (ti / 23) * 100, ly = (Y(base[ti]) / 180) * 100;
+    const chartH = isM ? 170 : 200;
+    const cardS = `background:${t.surf};border:1px solid ${t.border};border-radius:24px;padding:${isM ? 18 : 24}px;box-shadow:${t.shadow};backdrop-filter:blur(14px)`;
+    const focus = `outline:2px solid ${t.accent};outline-offset:2px`;
+    const btn = `border:0;font:inherit;cursor:pointer;color:${t.text};display:flex;align-items:center;justify-content:center;`;
+    const days = [['Mon', 'rain', 'Light rain', 0, 0, 82, 15], ['Tue', 'clouds', 'Broken clouds', 2, 1, 70, 11], ['Wed', 'clear', 'Clear sky', 5, 2, 48, 9], ['Thu', 'clear', 'Clear sky', 6, 3, 42, 8], ['Fri', 'thunder', 'Thunderstorm', 3, 4, 86, 22]]
+      .map(d => ({ day: d[0], kind: d[1], cond: d[2], hi: D.temp + d[3] + 1, lo: D.temp - 4 - d[4] + 0, sub: `${d[5]}% humidity · ${d[6]} km/h` }));
+    const ssR = ss === 'results';
+    const sel = `background:${t.surf2};`;
+    const itemS = `display:flex;align-items:center;gap:12px;padding:0 12px;min-height:48px;border-radius:12px;font-size:15px;`;
+    const skelBar = (w) => `display:block;height:12px;border-radius:6px;width:${w}px;background:${t.grid};animation:shim 1.4s ease-in-out infinite`;
+    return {
+      t, isM, isWide, isDash: view !== 'city', isCity: view === 'city', isSearch: view === 'search', ssResults: ssR, ssLoading: ss === 'loading', ssEmpty: ss === 'empty',
+      c, tip, chartH, gap, cardS, days,
+      themeIcon: dk ? 'sun' : 'night', themeLabel: dk ? 'Switch to light theme' : 'Switch to dark theme',
+      city: view === 'city' ? 'Lisbon' : 'Porto', region: view === 'city' ? 'Lisboa, Portugal' : 'Norte, Portugal',
+      pageTitle: view === 'city' ? 'Lisbon' : 'My Location',
+      query: ssR ? 'Po' : ss === 'loading' ? 'Lond' : 'Xyzzq',
+      gid: `g${theme}${dev}${view}`,
+      rootS: `width:${W}px;max-width:100%;box-sizing:border-box;font-family:Manrope,system-ui,sans-serif;color:${t.text};position:relative;overflow:hidden;${view === 'search' ? 'height:' + (isM ? 780 : 860) + 'px;' : ''}background:linear-gradient(180deg,${tints[cond]} 0,${t.base} ${isM ? 560 : 760}px),${t.base};background-color:${t.base}`,
+      headerS: `position:sticky;top:0;z-index:5;height:64px;box-sizing:border-box;padding:0 ${pad}px;display:flex;align-items:center;justify-content:space-between;background:${t.header};backdrop-filter:blur(18px);border-bottom:1px solid ${t.border}`,
+      searchBtnS: btn + `height:44px;gap:10px;padding:0 ${isM ? 12 : 14}px;border-radius:14px;background:${t.surf2};border:1px solid ${t.border};${isWide ? 'width:' + (isD ? 320 : 220) + 'px' : 'width:44px;padding:0'}`,
+      iconBtnS: btn + `width:44px;height:44px;border-radius:14px;background:transparent;flex:none`,
+      focusS: focus,
+      mainS: `box-sizing:border-box;padding:${isM ? 20 : 28}px ${pad}px 56px;max-width:1280px;margin:0 auto;display:flex;flex-direction:column;gap:${isM ? 22 : 28}px`,
+      h1S: `margin:0;font-size:${isM ? 26 : 32}px;font-weight:800;letter-spacing:-0.03em;white-space:nowrap`,
+      h2S: `margin:0;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:${t.muted}`,
+      h3S: `margin:0;font-size:15px;font-weight:700;letter-spacing:-0.01em`,
+      stripS: `display:flex;gap:12px;overflow-x:auto;padding:6px ${pad}px 14px;margin:-6px -${pad}px -8px;scroll-snap-type:x proximity;scrollbar-width:none`,
+      tileS: `position:relative;flex:none;width:${isM ? 150 : 172}px;height:${isM ? 150 : 164}px;box-sizing:border-box;padding:14px;border-radius:20px;background:${t.surf};border:1px solid ${t.border};display:flex;flex-direction:column;scroll-snap-align:start;transition:transform .2s,box-shadow .2s;backdrop-filter:blur(14px)`,
+      rmS: btn + `position:absolute;top:2px;right:2px;width:44px;height:44px;border-radius:14px;background:transparent`,
+      gridS: `display:grid;grid-template-columns:${isM ? 'minmax(0,1fr)' : 'repeat(2,minmax(0,1fr))'};gap:${gap}px;align-items:start`,
+      heroS: `${cardS};padding:${isM ? 20 : 28}px;border-radius:28px;display:flex;flex-direction:column`,
+      heroM: isM ? '16px 0 22px' : '20px 0 28px', bigS: `font-size:${isM ? 96 : 128}px;line-height:.9;font-weight:300;letter-spacing:-0.06em;font-variant-numeric:tabular-nums;margin-left:-4px`,
+      heroIcon: isM ? 84 : 112, heroIconPx: (isM ? 84 : 112) + 'px,' + (isM ? 84 : 112) + 'px',
+      chipS: `display:flex;flex-direction:column;gap:4px;padding:12px;border-radius:16px;background:${t.surf2};min-width:0`,
+      capS: `font-size:12px;font-weight:600;color:${t.muted}`, valS: `font-size:${isM ? 15 : 17}px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap`,
+      lineD: line(base), feelD: line(feel), areaD: line(base) + 'L600 180L0 180z', cursorD: `M${X(ti)} ${Y(base[ti])}V180`,
+      dotS: `position:absolute;left:${lx}%;top:${ly}%;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;background:${t.accent};border:3px solid ${t.tipBg};box-shadow:0 0 0 1px ${t.accent}`,
+      tipS: `position:absolute;left:${lx}%;top:${ly}%;transform:translate(-50%,-100%) translateY(-14px);padding:8px 12px;border-radius:12px;background:${t.tipBg};border:1px solid ${t.border};box-shadow:0 8px 20px -6px rgba(0,0,0,.4);white-space:nowrap`,
+      details: [{ kind: 'sunrise', k: 'Sunrise', v: '07:12' }, { kind: 'sunset', k: 'Sunset', v: '17:48' }, { kind: 'compass', k: 'Wind direction', v: 'NW · 315°' }, { kind: 'gauge', k: 'Pressure', v: '1014 hPa' }],
+      rowS: `display:flex;align-items:center;gap:${isM ? 12 : 16}px;min-height:64px;border-bottom:1px solid ${t.border}`,
+      favs: [['Lisbon', 'Portugal', 20, 'Few clouds', 'clouds'], ['Tokyo', 'Japan', 14, 'Clear sky', 'night'], ['Reykjavík', 'Iceland', -2, 'Light snow', 'snow'], ['Mumbai', 'India', 31, 'Thunderstorm', 'thunder']].map(f => ({ city: f[0], country: f[1], temp: f[2], cond: f[3], kind: f[4], rm: 'Remove ' + f[0] + ' from favorites' })),
+      scrimS: `position:absolute;inset:0;z-index:20;background:${dk ? 'rgba(4,8,16,.62)' : 'rgba(20,35,60,.32)'};backdrop-filter:blur(6px);display:flex;justify-content:center;align-items:flex-start;padding:${isM ? '72px 12px' : '88px 24px'}`,
+      dialogS: `width:${isM ? '100%' : 600}px;max-width:100%;box-sizing:border-box;border-radius:24px;background:${dk ? '#121B30' : '#FFFFFF'};border:1px solid ${t.border};box-shadow:0 30px 80px -20px rgba(0,0,0,.6);overflow:hidden`,
+      secS: `display:flex;align-items:center;padding:10px 12px 4px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:${t.muted}`,
+      itemS, clearS: btn + `min-height:44px;margin:-12px -8px;padding:0 10px;background:transparent;border-radius:10px;font-size:13px;font-weight:700;color:${t.accent};letter-spacing:0;text-transform:none`,
+      query2: '',
+      sFav: [{ city: 'Porto', country: 'Portugal', temp: 14 }, { city: 'Lisbon', country: 'Portugal', temp: 20 }],
+      sRec: [{ city: 'Tokyo', country: 'Japan' }, { city: 'Reykjavík', country: 'Iceland' }, { city: 'Mumbai', country: 'India' }],
+      sSug: [['Porto', 'Portugal', '41.15°N 8.61°W'], ['Pontevedra', 'Spain', '42.43°N 8.64°W'], ['Poznań', 'Poland', '52.41°N 16.93°E']].map((s, i) => ({ city: s[0], country: s[1], coord: s[2], s: itemS + (i === 0 ? sel + `box-shadow:inset 0 0 0 1.5px ${t.accent}` : '') })),
+      skel: [140, 110, 160, 120].map(w => ({ a: skelBar(18).replace('height:12px', 'height:18px'), b: skelBar(w) }))
+    };
+  }
+}
+</script>
+</body>
+</html>

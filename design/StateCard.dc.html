@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap"><style>@keyframes shim{0%,100%{opacity:.5}50%{opacity:1}}</style></helmet>
+<div style="{{ boxS }}">
+  <sc-if value="{{ isSkel }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-direction:column;gap:14px" aria-busy="true" aria-label="Loading weather">
+      <div style="display:flex;gap:10px"><i style="{{ b1 }}"></i><i style="{{ b1 }}"></i><i style="{{ b1 }}"></i></div>
+      <div style="{{ panelS }}"><i style="{{ bar }};width:90px;height:12px"></i><i style="{{ bar }};width:170px;height:76px;border-radius:16px;margin-top:6px"></i><i style="{{ bar }};width:120px;height:14px"></i><div style="display:flex;gap:8px;margin-top:6px"><i style="{{ bar }};flex:1;height:48px;border-radius:14px"></i><i style="{{ bar }};flex:1;height:48px;border-radius:14px"></i><i style="{{ bar }};flex:1;height:48px;border-radius:14px"></i></div></div>
+      <div style="{{ panelS }}"><i style="{{ bar }};width:110px;height:12px"></i><i style="{{ bar }};height:96px;border-radius:14px;margin-top:6px"></i></div>
+      <div style="font-size:12px;color:{{ t.muted }};text-align:center">Skeletons fade to content in 200 ms</div>
+    </div>
+  </sc-if>
+  <sc-if value="{{ isDenied }}" hint-placeholder-val="{{ false }}"><div style="{{ centerS }}"><div style="{{ badgeS }}"><dc-import name="WIcon" kind="pinoff" size="30" color="{{ t.accent }}" hint-size="30px,30px"></dc-import></div><h3 style="{{ hS }}">Location access is off</h3><p style="{{ pS }}">Weatherly can’t read your position. Search for a city instead, or allow location in your browser settings.</p><div style="display:flex;gap:10px;margin-top:6px"><button style="{{ primS }}"><dc-import name="WIcon" kind="search" size="18" color="{{ t.onAcc }}" hint-size="18px,18px"></dc-import>Search for a city</button></div></div></sc-if>
+  <sc-if value="{{ isError }}" hint-placeholder-val="{{ false }}"><div style="{{ centerS }}"><div style="{{ badgeS }}"><dc-import name="WIcon" kind="alert" size="30" color="{{ t.warn }}" hint-size="30px,30px"></dc-import></div><h3 style="{{ hS }}">Couldn’t load the weather</h3><p style="{{ pS }}">The weather service didn’t respond. Your favorites are safe — try again in a moment.</p><button style="{{ primS }};margin-top:6px"><dc-import name="WIcon" kind="refresh" size="18" color="{{ t.onAcc }}" hint-size="18px,18px"></dc-import>Retry</button></div></sc-if>
+  <sc-if value="{{ isNf }}" hint-placeholder-val="{{ false }}"><div style="{{ centerS }}"><div style="{{ badgeS }}"><dc-import name="WIcon" kind="help" size="30" color="{{ t.accent }}" hint-size="30px,30px"></dc-import></div><h3 style="{{ hS }}">City not found</h3><p style="{{ pS }}">We couldn’t find “Atlantis” in the weather database. Check the spelling or search again.</p><button style="{{ primS }};margin-top:6px"><dc-import name="WIcon" kind="search" size="18" color="{{ t.onAcc }}" hint-size="18px,18px"></dc-import>Search again</button></div></sc-if>
+  <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}"><div style="{{ centerS }}"><div style="{{ badgeS }}"><dc-import name="WIcon" kind="star" size="30" color="#F5B83D" hint-size="30px,30px"></dc-import></div><h3 style="{{ hS }}">No favorites yet</h3><p style="{{ pS }}">Tap the star next to any city name to pin it here for a quick look.</p></div></sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;kind&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;skeleton&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;skeleton&quot;,&quot;denied&quot;,&quot;error&quot;,&quot;notfound&quot;,&quot;empty&quot;]},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;dark&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;dark&quot;,&quot;light&quot;]}}">
+class Component extends DCLogic {
+  renderVals() {
+    const p = this.props, dk = (p.theme || 'dark') === 'dark', k = p.kind || 'skeleton';
+    const t = dk ? { text: '#F2F6FB', muted: '#A9B6C8', accent: '#7CC4FF', border: 'rgba(255,255,255,.12)', surf: 'rgba(255,255,255,.075)', bg: '#0F1830', grid: 'rgba(255,255,255,.12)', onAcc: '#06182B', warn: '#FFB86B' }
+      : { text: '#0F1B2D', muted: '#475569', accent: '#0A5FB0', border: 'rgba(15,30,55,.11)', surf: 'rgba(255,255,255,.8)', bg: '#EEF3F9', grid: 'rgba(15,30,55,.1)', onAcc: '#FFFFFF', warn: '#B45309' };
+    const bar = `display:block;border-radius:8px;background:${t.grid};animation:shim 1.4s ease-in-out infinite`;
+    return {
+      t, bar, isSkel: k === 'skeleton', isDenied: k === 'denied', isError: k === 'error', isNf: k === 'notfound', isEmpty: k === 'empty',
+      boxS: `width:100%;box-sizing:border-box;padding:28px;border-radius:28px;background:${t.bg};border:1px solid ${t.border};font-family:Manrope,system-ui,sans-serif;color:${t.text};min-height:380px;display:flex;flex-direction:column;justify-content:center`,
+      b1: bar + ';width:112px;height:100px;border-radius:20px;flex:none',
+      panelS: `padding:18px;border-radius:24px;background:${t.surf};border:1px solid ${t.border};display:flex;flex-direction:column;gap:10px`,
+      centerS: 'display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px',
+      badgeS: `width:72px;height:72px;border-radius:24px;background:${t.surf};border:1px solid ${t.border};display:flex;align-items:center;justify-content:center;margin-bottom:6px`,
+      hS: 'margin:0;font-size:21px;font-weight:800;letter-spacing:-0.02em', pS: `margin:0;font-size:14px;line-height:1.5;color:${t.muted};max-width:300px`,
+      primS: `border:0;cursor:pointer;font:700 15px Manrope;min-height:44px;padding:0 20px;border-radius:14px;background:${t.accent};color:${t.onAcc};display:flex;align-items:center;gap:8px`
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,14 +1,12 @@
-// src/components/weather/favorite-cities.tsx
 import { useNavigate } from "react-router-dom";
 import { useWeatherQuery } from "@/hooks/use-weather";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { X } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { useFavorites } from "@/hooks/use-favorite";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
+import { conditionKind, formatTemp } from "@/lib/weather";
+import { WeatherIcon } from "./weather-icon";
 
-interface FavoriteCityTabletProps {
+interface FavoriteCityTileProps {
   id: string;
   name: string;
   lat: number;
@@ -16,77 +14,72 @@ interface FavoriteCityTabletProps {
   onRemove: (id: string) => void;
 }
 
-function FavoriteCityTablet({
+function FavoriteCityTile({
   id,
   name,
   lat,
   lon,
   onRemove,
-}: FavoriteCityTabletProps) {
+}: FavoriteCityTileProps) {
   const navigate = useNavigate();
   const { data: weather, isLoading } = useWeatherQuery({ lat, lon });
 
-  const handleClick = () => {
+  const open = () =>
     navigate(`/city/${encodeURIComponent(name)}?lat=${lat}&lon=${lon}`);
-  };
 
   return (
-    <div
-      onClick={handleClick}
-      className="relative flex min-w-[260px] items-center gap-3 rounded-xl border bg-card p-4 pr-10 
-      shadow-sm transition-all hover:shadow-lg hover:-translate-y-[2px]
-      cursor-pointer focus-visible:ring-2 focus-visible:ring-ring"
-      role="button"
-      tabIndex={0}
-    >
-      <Button
-        variant="ghost"
-        size="icon"
-        className="absolute right-2 top-2 h-7 w-7 rounded-full opacity-70 transition hover:bg-destructive/20 hover:text-destructive hover:opacity-100"
-        onClick={(e) => {
-          e.stopPropagation();
+    <div className="relative flex-none snap-start">
+      <button
+        onClick={open}
+        aria-label={`Open weather for ${name}`}
+        className="glass flex h-[150px] w-[150px] flex-col rounded-3xl p-3.5 text-left transition duration-200 hover:-translate-y-1 hover:shadow-xl sm:h-[164px] sm:w-[172px]"
+      >
+        {isLoading || !weather ? (
+          <>
+            <Skeleton className="h-[30px] w-[30px] rounded-full" />
+            <div className="mt-auto w-full space-y-2">
+              <Skeleton className="h-4 w-20" />
+              <Skeleton className="h-3 w-12" />
+              <Skeleton className="h-6 w-14" />
+            </div>
+          </>
+        ) : (
+          <>
+            <WeatherIcon
+              kind={conditionKind(weather.weather[0])}
+              size={30}
+              className="text-brand"
+            />
+            <div className="mt-auto w-full">
+              <p className="truncate text-[15px] font-bold tracking-tight">
+                {name}
+              </p>
+              <p className="mt-px text-xs text-muted-foreground">
+                {weather.sys.country}
+              </p>
+              <div className="mt-2 flex items-baseline justify-between gap-1">
+                <span className="text-[26px] font-light tracking-tight tabular-nums">
+                  {formatTemp(weather.main.temp)}
+                </span>
+                <span className="truncate text-xs capitalize text-muted-foreground">
+                  {weather.weather[0].main}
+                </span>
+              </div>
+            </div>
+          </>
+        )}
+      </button>
+
+      <button
+        onClick={() => {
           onRemove(id);
           toast.error(`Removed ${name} from Favorites`);
         }}
+        aria-label={`Remove ${name} from favorites`}
+        className="absolute right-0.5 top-0.5 flex h-11 w-11 items-center justify-center rounded-[14px] text-muted-foreground transition hover:text-foreground"
       >
-        <X className="h-4 w-4" />
-      </Button>
-
-      {isLoading ? (
-        // Skeleton Loading
-        <div className="flex gap-3 items-center w-full">
-          <Skeleton className="h-10 w-10 rounded-full" />
-          <div className="flex-1">
-            <Skeleton className="h-4 w-24 mb-2" />
-            <Skeleton className="h-3 w-14" />
-          </div>
-          <Skeleton className="h-6 w-10" />
-        </div>
-      ) : weather ? (
-        <>
-          <img
-            src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}.png`}
-            alt={weather.weather[0].description}
-            className="h-10 w-10 drop-shadow-[0_0_6px_rgba(255,255,255,0.4)]"
-          />
-
-          <div>
-            <p className="font-semibold leading-none">{name}</p>
-            <p className="text-xs text-muted-foreground">
-              {weather.sys.country}
-            </p>
-          </div>
-
-          <div className="ml-auto text-right leading-none">
-            <p className="text-2xl font-extrabold">
-              {Math.round(weather.main.temp)}°
-            </p>
-            <p className="text-xs capitalize text-muted-foreground">
-              {weather.weather[0].description}
-            </p>
-          </div>
-        </>
-      ) : null}
+        <WeatherIcon kind="x" size={16} />
+      </button>
     </div>
   );
 }
@@ -97,23 +90,24 @@ export function FavoriteCities() {
   if (!favorites.length) return null;
 
   return (
-    <>
-      <h1 className="mb-2 text-xl font-semibold tracking-tight flex items-center gap-2">
-        ⭐ Favorites
-      </h1>
-
-      <ScrollArea className="w-full pb-4">
-        <div className="flex gap-4">
-          {favorites.map((city) => (
-            <FavoriteCityTablet
-              key={city.id}
-              {...city}
-              onRemove={() => removeFavorite.mutate(city.id)}
-            />
-          ))}
-        </div>
-        <ScrollBar orientation="horizontal" className="mt-2" />
-      </ScrollArea>
-    </>
+    <section aria-label="Favorites" className="flex flex-col gap-3">
+      <div className="flex items-baseline justify-between">
+        <h2 className="overline">Favorites</h2>
+        <span className="text-[13px] text-muted-foreground">
+          {favorites.length} {favorites.length === 1 ? "city" : "cities"}
+        </span>
+      </div>
+      <div
+        className="-mx-4 flex snap-x snap-proximity gap-3 overflow-x-auto px-4 pb-3.5 pt-1.5 sm:-mx-7 sm:px-7 lg:-mx-12 lg:px-12 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+        {favorites.map((city) => (
+          <FavoriteCityTile
+            key={city.id}
+            {...city}
+            onRemove={() => removeFavorite.mutate(city.id)}
+          />
+        ))}
+      </div>
+    </section>
   );
 }

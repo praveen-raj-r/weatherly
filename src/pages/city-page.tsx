@@ -1,13 +1,13 @@
 import { useParams, useSearchParams } from "react-router-dom";
 import { useWeatherQuery, useForecastQuery } from "@/hooks/use-weather";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertTriangle } from "lucide-react";
+import { useWeatherTint } from "@/hooks/use-weather-tint";
 import HourlyTemperature from "../components/hourly-temprature";
 import WeatherDetails from "../components/weather-details";
 import WeatherForecast from "../components/weather-forecast";
 import CurrentWeather from "../components/current-weather";
 import WeatherSkeleton from "../components/loading-skeleton";
 import { FavoriteButton } from "@/components/favorite-button";
+import { CityNotFound, LoadError } from "@/components/state-card";
 
 export function CityPage() {
   const [searchParams] = useSearchParams();
@@ -27,25 +27,20 @@ export function CityPage() {
   const weatherQuery = useWeatherQuery(coordinates);
   const forecastQuery = useForecastQuery(coordinates);
 
+  useWeatherTint(weatherQuery.data?.weather[0]);
+
   if (!validCoords) {
-    return (
-      <Alert variant="destructive">
-        <AlertTriangle className="h-4 w-4" />
-        <AlertDescription>
-          City not found. Use the search bar to pick a city.
-        </AlertDescription>
-      </Alert>
-    );
+    return <CityNotFound />;
   }
 
   if (weatherQuery.error || forecastQuery.error) {
     return (
-      <Alert variant="destructive">
-        <AlertTriangle className="h-4 w-4" />
-        <AlertDescription>
-          Failed to load weather data. Please try again.
-        </AlertDescription>
-      </Alert>
+      <LoadError
+        onRetry={() => {
+          weatherQuery.refetch();
+          forecastQuery.refetch();
+        }}
+      />
     );
   }
 
@@ -54,22 +49,27 @@ export function CityPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold tracking-tight">
+    <div className="flex animate-fadein flex-col gap-6 sm:gap-7">
+      <div className="flex items-center gap-2.5">
+        <h1 className="min-w-0 truncate text-[26px] font-extrabold tracking-tight sm:text-[32px]">
           {params.cityName}, {weatherQuery.data.sys.country}
         </h1>
-        <div className="flex gap-2">
-          <FavoriteButton
-            data={{ ...weatherQuery.data, name: params.cityName }}
-          />
-        </div>
+        <FavoriteButton data={{ ...weatherQuery.data, name: params.cityName }} />
       </div>
 
-      <div className="grid gap-6">
-        <CurrentWeather data={weatherQuery.data} />
-        <HourlyTemperature data={forecastQuery.data} />
-        <div className="grid gap-6 md:grid-cols-2 items-start">
+      <div className="grid items-start gap-3.5 sm:gap-5 md:grid-cols-2">
+        <div className="flex min-w-0 flex-col gap-3.5 sm:gap-5">
+          <CurrentWeather
+            data={{ ...weatherQuery.data, name: params.cityName }}
+            onRefresh={() => {
+              weatherQuery.refetch();
+              forecastQuery.refetch();
+            }}
+            refreshing={weatherQuery.isFetching || forecastQuery.isFetching}
+          />
+          <HourlyTemperature data={forecastQuery.data} />
+        </div>
+        <div className="flex min-w-0 flex-col gap-3.5 sm:gap-5">
           <WeatherDetails data={weatherQuery.data} />
           <WeatherForecast data={forecastQuery.data} />
         </div>

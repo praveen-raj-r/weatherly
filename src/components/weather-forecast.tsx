@@ -1,107 +1,85 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { ArrowDown, ArrowUp, Droplets, Wind } from "lucide-react";
 import { format } from "date-fns";
 import type { ForecastData } from "@/api/types";
+import { conditionKind, msToKmh } from "@/lib/weather";
+import { Card } from "./ui/card";
+import { WeatherIcon } from "./weather-icon";
 
 interface WeatherForecastProps {
   data: ForecastData;
 }
 
+type ForecastItem = ForecastData["list"][number];
+
+interface DayForecast {
+  date: number;
+  temp_min: number;
+  temp_max: number;
+  humidity: number;
+  wind: number;
+  weather: ForecastItem["weather"][number];
+}
+
 const WeatherForecast = ({ data }: WeatherForecastProps) => {
-  const dailyForecasts = data.list.reduce((acc: any, forecast: any) => {
-    const date = format(new Date(forecast.dt * 1000), "yyyy-MM-dd");
+  // Group the 3-hourly entries by day
+  const groups = new Map<string, ForecastItem[]>();
+  for (const item of data.list) {
+    const key = format(new Date(item.dt * 1000), "yyyy-MM-dd");
+    groups.set(key, [...(groups.get(key) ?? []), item]);
+  }
 
-    if (!acc[date]) {
-      acc[date] = {
-        date: forecast.dt,
-        temp_min: forecast.main.temp_min,
-        temp_max: forecast.main.temp_max,
-        humidity: forecast.main.humidity,
-        wind: forecast.wind.speed,
-        weather: forecast.weather[0],
-      };
-    } else {
-      acc[date].temp_min = Math.min(acc[date].temp_min, forecast.main.temp_min);
-      acc[date].temp_max = Math.max(acc[date].temp_max, forecast.main.temp_max);
-    }
-    return acc;
-  }, {});
+  const days: DayForecast[] = [...groups.values()].map((items) => {
+    // Representative condition: the entry closest to midday
+    const noon =
+      items.find((i) => new Date(i.dt * 1000).getHours() >= 12) ?? items[0];
+    return {
+      date: items[0].dt,
+      temp_min: Math.min(...items.map((i) => i.main.temp_min)),
+      temp_max: Math.max(...items.map((i) => i.main.temp_max)),
+      humidity: Math.round(
+        items.reduce((s, i) => s + i.main.humidity, 0) / items.length
+      ),
+      wind: Math.max(...items.map((i) => i.wind.speed)),
+      weather: noon.weather[0],
+    };
+  });
 
-  const nextDays = Object.values(dailyForecasts).slice(1, 6);
-
-  const formatTemp = (temp: number) => `${Math.round(temp)}°`;
+  const nextDays = days.slice(1, 6);
 
   return (
-    <Card className="bg-gradient-to-br from-slate-950 to-slate-900 border border-white/10 shadow-xl backdrop-blur-md">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-lg md:text-xl font-semibold text-white">
-          5-Day Forecast
-        </CardTitle>
-        <p className="text-[13px] text-slate-400">
-          Daily overview • Next 5 days
-        </p>
-      </CardHeader>
-
-      <CardContent>
-        <div className="flex flex-wrap justify-center gap-3">
-          {nextDays.map((day: any) => (
-            <div
-              key={day.date}
-              className="grid grid-cols-3 sm:grid-cols-4 items-center gap-2 sm:gap-4 rounded-xl bg-white/5 border border-white/10 p-3 sm:p-4 transition hover:bg-white/10"
-            >
-              {/* Date */}
-              <div className="flex flex-col text-center sm:text-left">
-                <p className="font-medium text-white text-sm">
-                  {format(new Date(day.date * 1000), "EEE")}
-                </p>
-                <p className="text-[13px] text-slate-400">
-                  {format(new Date(day.date * 1000), "MMM d")}
-                </p>
-              </div>
-
-              {/* Weather Icon + Name */}
-              <div className="flex flex-col items-center justify-center">
-                <img
-                  src={`https://openweathermap.org/img/wn/${day.weather.icon}@2x.png`}
-                  alt={day.weather.description}
-                  className="h-10 w-10 sm:h-12 sm:w-12"
-                />
-                <p className="text-[10px] text-slate-400 capitalize">
-                  {day.weather.main}
-                </p>
-              </div>
-
-              {/* Temperature */}
-              <div className="flex flex-col items-center justify-center gap-[2px] font-semibold">
-                <span className="flex items-center text-blue-400 text-xs sm:text-sm">
-                  <ArrowDown className="mr-1 h-4 w-4" />
-                  {formatTemp(day.temp_min)}
-                </span>
-                <span className="flex items-center text-red-400 text-xs sm:text-sm">
-                  <ArrowUp className="mr-1 h-4 w-4" />
-                  {formatTemp(day.temp_max)}
-                </span>
-              </div>
-
-              {/* Humidity + Wind */}
-              <div
-                className="flex flex-col justify-center items-end gap-[2px] 
-              text-[10px] sm:text-xs text-slate-300"
-              >
-                <span className="flex items-center gap-1">
-                  <Droplets className="h-3 w-3 sm:h-4 sm:w-4 text-blue-400" />
-                  {day.humidity}%
-                </span>
-                <span className="flex items-center gap-1">
-                  <Wind className="h-3 w-3 sm:h-4 sm:w-4 text-blue-400" />
-                  {day.wind} m/s
-                </span>
-              </div>
+    <Card className="p-5 sm:p-6">
+      <h3 className="text-[15px] font-bold tracking-tight">5-day forecast</h3>
+      <ul className="mt-1.5 flex flex-col">
+        {nextDays.map((day) => (
+          <li
+            key={day.date}
+            className="flex min-h-16 items-center gap-3 border-b last:border-b-0 sm:gap-4"
+            style={{ borderColor: "var(--line)" }}
+          >
+            <span className="w-11 text-sm font-bold">
+              {format(new Date(day.date * 1000), "EEE")}
+            </span>
+            <WeatherIcon
+              kind={conditionKind({ ...day.weather, icon: day.weather.icon.replace("n", "d") })}
+              size={28}
+              className="text-brand"
+            />
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-medium capitalize">
+                {day.weather.description}
+              </p>
+              <p className="mt-px text-xs text-muted-foreground">
+                {day.humidity}% humidity · {msToKmh(day.wind)} km/h
+              </p>
             </div>
-          ))}
-        </div>
-      </CardContent>
+            <div className="flex gap-2.5 text-[15px] tabular-nums">
+              <span className="font-bold">{Math.round(day.temp_max)}°</span>
+              <span className="text-muted-foreground">
+                {Math.round(day.temp_min)}°
+              </span>
+            </div>
+          </li>
+        ))}
+      </ul>
     </Card>
   );
 };
