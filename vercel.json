@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/api/owm/:path*", "destination": "/api/owm?path=:path*" },
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
+  ]
+}

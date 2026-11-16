@@ -1,9 +1,6 @@
+// Requests go through our own proxy (api/owm.ts on Vercel, Vite proxy in dev),
+// which adds the OpenWeatherMap API key server-side.
 export const API_CONFIG = {
-  BASE_URL: "https://api.openweathermap.org/data/2.5",
-  GEO: "https://api.openweathermap.org/geo/1.0",
-  API_KEY: import.meta.env.VITE_OPENWEATHER_API_KEY,
-  DEFAULT_PARAMS: {
-    units: "metric",
-    appid: import.meta.env.VITE_OPENWEATHER_API_KEY,
-  },
+  BASE_URL: "/api/owm/data/2.5",
+  GEO: "/api/owm/geo/1.0",
 };
