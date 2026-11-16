@@ -42,6 +42,8 @@ export function WeatherDashboard() {
 
   if (locationError) {
     return (
+      <div className="space-y-4">
+      <FavoriteCities />
       <Card className="border-red-500/30 bg-red-50 dark:bg-red-900/20">
         <CardHeader className="flex flex-row items-center gap-2">
           <div className="rounded-full bg-red-500/10 p-2">
@@ -65,8 +67,12 @@ export function WeatherDashboard() {
             <MapPin className="mr-2 h-4 w-4" />
             Enable Location Access
           </Button>
+          <p className="text-sm text-muted-foreground">
+            Or use the search bar above to look up any city.
+          </p>
         </CardContent>
       </Card>
+      </div>
     );
   }
 

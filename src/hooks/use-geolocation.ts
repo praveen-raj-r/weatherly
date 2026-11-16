@@ -62,9 +62,9 @@ export function useGeolocation() {
         });
       },
       {
-        enableHighAccuracy: true,
-        timeout: 5000,
-        maximumAge: 0,
+        enableHighAccuracy: false,
+        timeout: 15000,
+        maximumAge: 5 * 60 * 1000,
       }
     );
   };

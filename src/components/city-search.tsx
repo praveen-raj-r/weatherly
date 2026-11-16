@@ -16,30 +16,38 @@ import {
 } from "@/components/ui/command";
 import { Button } from "@/components/ui/button";
 import { useFavorites } from "@/hooks/use-favorite";
+import { useDebounce } from "@/hooks/use-debounce";
 
 export function CitySearch() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
 
-  const { data: locations, isLoading } = useLocationSearch(query);
+  const debouncedQuery = useDebounce(query, 300);
+  const { data: locations, isLoading } = useLocationSearch(debouncedQuery);
   const { favorites } = useFavorites();
   const { history, clearHistory, addToHistory } = useSearchHistory();
 
-  const handleSelect = (cityData: string) => {
-    const [lat, lon, name, country] = cityData.split("|");
-
-    // Add to search history
+  const handleSelect = (city: {
+    lat: number;
+    lon: number;
+    name: string;
+    country: string;
+    state?: string;
+  }) => {
     addToHistory.mutate({
       query,
-      name,
-      lat: parseFloat(lat),
-      lon: parseFloat(lon),
-      country,
+      name: city.name,
+      lat: city.lat,
+      lon: city.lon,
+      country: city.country,
+      state: city.state,
     });
 
     setOpen(false);
-    navigate(`/city/${name}?lat=${lat}&lon=${lon}`);
+    navigate(
+      `/city/${encodeURIComponent(city.name)}?lat=${city.lat}&lon=${city.lon}`
+    );
   };
 
   return (
@@ -60,7 +68,7 @@ export function CitySearch() {
             onValueChange={setQuery}
           />
           <CommandList>
-            {query.length > 2 && !isLoading && (
+            {debouncedQuery.length > 2 && !isLoading && (
               <CommandEmpty>No cities found.</CommandEmpty>
             )}
 
@@ -71,7 +79,7 @@ export function CitySearch() {
                   <CommandItem
                     key={city.id}
                     value={`${city.lat}|${city.lon}|${city.name}|${city.country}`}
-                    onSelect={handleSelect}
+                    onSelect={() => handleSelect(city)}
                   >
                     <Star className="mr-2 h-4 w-4 text-yellow-500" />
                     <span>{city.name}</span>
@@ -110,7 +118,7 @@ export function CitySearch() {
                     <CommandItem
                       key={item.id}
                       value={`${item.lat}|${item.lon}|${item.name}|${item.country}`}
-                      onSelect={handleSelect}
+                      onSelect={() => handleSelect(item)}
                     >
                       <Clock className="mr-2 h-4 w-4 text-muted-foreground" />
                       <span>{item.name}</span>
@@ -144,7 +152,7 @@ export function CitySearch() {
                   <CommandItem
                     key={`${location.lat}-${location.lon}`}
                     value={`${location.lat}|${location.lon}|${location.name}|${location.country}`}
-                    onSelect={handleSelect}
+                    onSelect={() => handleSelect(location)}
                   >
                     <Search className="mr-2 h-4 w-4" />
                     <span>{location.name}</span>

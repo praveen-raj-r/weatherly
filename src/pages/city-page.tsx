@@ -12,13 +12,31 @@ import { FavoriteButton } from "@/components/favorite-button";
 export function CityPage() {
   const [searchParams] = useSearchParams();
   const params = useParams();
-  const lat = parseFloat(searchParams.get("lat") || "0");
-  const lon = parseFloat(searchParams.get("lon") || "0");
+  const latParam = searchParams.get("lat");
+  const lonParam = searchParams.get("lon");
+  const lat = latParam === null ? NaN : Number(latParam);
+  const lon = lonParam === null ? NaN : Number(lonParam);
+  const validCoords =
+    Number.isFinite(lat) &&
+    Number.isFinite(lon) &&
+    Math.abs(lat) <= 90 &&
+    Math.abs(lon) <= 180;
 
-  const coordinates = { lat, lon };
+  const coordinates = validCoords ? { lat, lon } : null;
 
   const weatherQuery = useWeatherQuery(coordinates);
   const forecastQuery = useForecastQuery(coordinates);
+
+  if (!validCoords) {
+    return (
+      <Alert variant="destructive">
+        <AlertTriangle className="h-4 w-4" />
+        <AlertDescription>
+          City not found. Use the search bar to pick a city.
+        </AlertDescription>
+      </Alert>
+    );
+  }
 
   if (weatherQuery.error || forecastQuery.error) {
     return (
